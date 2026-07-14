@@ -28,7 +28,7 @@ const Preloader = ({ onDone }) => {
         <span className="preloader-scoop" />
         <span className="preloader-wafer" />
       </div>
-      <p className="preloader-text">scooping</p>
+      <p className="preloader-text">Dikshu by DOS</p>
     </div>
   )
 }

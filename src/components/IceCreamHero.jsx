@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { flavors } from '../data/flavors'
 import SocialIcons from './SocialIcons'
 import './IceCreamHero.css'
@@ -51,38 +51,37 @@ const IceCreamHero = () => {
   const [line1, line2] = current.name.split('\n')
   const cooling = useRef(false)
 
-  const next = () => setIndex((i) => (i + 1) % len)
-  const prev = () => setIndex((i) => (i - 1 + len) % len)
-
   useEffect(() => {
     const onWheel = (e) => {
       if (cooling.current || Math.abs(e.deltaY) < WHEEL_THRESHOLD) return
       cooling.current = true
-      if (e.deltaY > 0) next()
-      else prev()
+      setIndex((i) => (e.deltaY > 0 ? (i + 1) % len : (i - 1 + len) % len))
       setTimeout(() => {
         cooling.current = false
       }, WHEEL_COOLDOWN)
     }
     window.addEventListener('wheel', onWheel, { passive: true })
     return () => window.removeEventListener('wheel', onWheel)
-  }, [])
+  }, [len])
 
   const upcoming = [flavors[(index + 1) % len], flavors[(index + 2) % len], flavors[(index + 3) % len]]
 
   return (
-    <motion.section
+    <Motion.section
       className="icecream-hero"
       animate={{ background: current.gradient }}
       transition={BG_TRANSITION}
     >
       <div className="icecream-top">
-        <div className="icecream-logo">Scoopy</div>
+        <div className="icecream-logo" aria-label="Dikshu by DOS">
+          <span>Dikshu</span>
+          <small>DOS</small>
+        </div>
       </div>
 
       <div className="icecream-stack-stage" aria-hidden="true">
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <Motion.img
             key={upcoming[2].id}
             src={upcoming[2].image}
             alt=""
@@ -94,7 +93,7 @@ const IceCreamHero = () => {
           />
         </AnimatePresence>
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <Motion.img
             key={upcoming[1].id}
             src={upcoming[1].image}
             alt=""
@@ -106,7 +105,7 @@ const IceCreamHero = () => {
           />
         </AnimatePresence>
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <Motion.img
             key={upcoming[0].id}
             src={upcoming[0].image}
             alt=""
@@ -121,7 +120,7 @@ const IceCreamHero = () => {
 
       <div className="icecream-visual-stage">
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <Motion.img
             key={current.id}
             src={current.particle}
             alt=""
@@ -134,7 +133,7 @@ const IceCreamHero = () => {
           />
         </AnimatePresence>
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <Motion.img
             key={current.id}
             src={current.image}
             alt={current.name.replace('\n', ' ')}
@@ -148,9 +147,10 @@ const IceCreamHero = () => {
       </div>
 
       <div className="icecream-content">
+        <p className="icecream-kicker">A DOS dessert collection</p>
         <h1 className="icecream-title" aria-live="polite">
           <AnimatePresence mode="popLayout">
-            <motion.span
+            <Motion.span
               key={current.id}
               className="icecream-title-inner"
               variants={NAME_VARIANTS}
@@ -160,13 +160,13 @@ const IceCreamHero = () => {
             >
               <span>{line1}</span>
               <span>{line2}</span>
-            </motion.span>
+            </Motion.span>
           </AnimatePresence>
         </h1>
 
         <div className="icecream-desc">
           <AnimatePresence mode="popLayout">
-            <motion.p
+            <Motion.p
               key={current.id}
               variants={TEXT_VARIANTS}
               initial="initial"
@@ -174,13 +174,13 @@ const IceCreamHero = () => {
               exit="exit"
             >
               {current.description}
-            </motion.p>
+            </Motion.p>
           </AnimatePresence>
         </div>
 
         <div className="icecream-order">
           <AnimatePresence mode="popLayout">
-            <motion.button
+            <Motion.button
               key={current.id}
               className="icecream-order-btn"
               variants={BTN_VARIANTS}
@@ -188,8 +188,8 @@ const IceCreamHero = () => {
               animate="animate"
               exit="exit"
             >
-              Order Now
-            </motion.button>
+              Order from DOS
+            </Motion.button>
           </AnimatePresence>
         </div>
       </div>
@@ -206,7 +206,7 @@ const IceCreamHero = () => {
       </div>
 
       <SocialIcons className="icecream-socials social-icons--plain" />
-    </motion.section>
+    </Motion.section>
   )
 }
 
